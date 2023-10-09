@@ -3,21 +3,7 @@
 #include <stack>
 #include <limits>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                        // Téléchargez la bibliothèque inih depuis https://github.com/benhoyt/inih.
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 using namespace std;
-
-#define VALEUR_DEF_ENTRE_SOMMET 2000
-
-#define VALEUR_DEF_STOCKAGE_CABINE 2
-
-#define SOMMET_DEPART 0
-
-
 class arete{
     public:
     int start;
@@ -53,6 +39,24 @@ class arete{
         }
     }
 
-
-
 };
+
+class Graphe {
+/*
+MATRICE DE CHANGE : 
+                 |   EURO |  USD  |  JP  |  CHF
+            -----------------------------------        
+            EURO |     1  |  1.19 | 1.33 | 1.62
+            USD  |   0.84 |   1   | 1.12 | 1.37
+            JP   |   0.75 |  0.89 |  1   | 1.22
+            CHF  |   0.62 |  0.73 | 0.82 |  1 
+
+*/
+
+
+public:
+    int nombre_sommet;
+    vector<sommet> mes_sommets;
+    Graphe(){}
+};
+          

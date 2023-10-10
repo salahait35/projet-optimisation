@@ -15,9 +15,23 @@ enum change{
     CHF  = 4,
 };
 
+string devise(int c) {
+    switch (c) {
+        case EURO:
+            return "EURO";
+        case USD:
+            return "USD";
+        case JP:
+            return "JP";
+        case CHF:
+            return "CHF";
+        default:
+            return "Valeur d'énumération non trouvée";
+    }
+}
 
 
-class arete{
+class arete {
     public:
     int start;
     int end;
@@ -27,8 +41,7 @@ class arete{
         end = e;
         cost = c;
     }
-    void affiche_arrete(){cout<<"Arete : "<<change(start)<<" --------- "<<cost<<" ---------> "<<end<<endl;}
-    float renvoi_le_cout_pour_un_sommet(int sommet){return 0;}
+    void affiche_arrete(){cout<<"Arete : "<<devise(start)<<" --------- "<<cost<<" ---------> "<<devise(end)<<endl;}
 }; 
 
  class sommet{
@@ -44,13 +57,24 @@ class arete{
         if(connexions.size()>0)
         {
         cout<<"***************************************"<<endl;
-        cout<<" SOMMET ID : "<<id<<endl;
+        cout<<" SOMMET ID : "<<devise(id)<<endl;
         for(int i=0;i<connexions.size();i++)
         {
             connexions[i].affiche_arrete();
         }
         cout<<"***************************************"<<endl;
         }
+    }
+    
+    bool trouve_cette_arete(int change)
+    {
+        for (const arete& a : connexions) {
+        if (a.end == change) {
+            //return a;
+            return true; cout<<"VRAI";
+            }
+        }
+        return false;
     }
 
 };
@@ -76,12 +100,13 @@ MATRICE DE CHANGE :
 public:
     int nombre_sommet;
     vector<sommet> mes_sommets;
+    vector <vector <int> > cycle_dispo;
     Graphe(){
         nombre_sommet = 4;
-        
-        // for(int i=1;i<=nombre_sommet;i++)
-        // {
-        //     mes_sommets.push_back(sommet(i));
+
+        for(int i=1;i<=nombre_sommet;i++)
+        {
+             mes_sommets.push_back(sommet(i));
         //     for(int j = 0;j<nombre_sommet;j++)
         //     {
         //         if(j != i-1)
@@ -89,48 +114,124 @@ public:
         //             mes_sommets[i-1].connexions.push_back(arete(i,j+1,matriceDeChange[i-1][j]));
         //         }
         //     }
-        // }
+        }
+    }
 
+    void affich_mes_cycle()
+    {
+        for (const std::vector<int>& cycle : cycle_dispo) {
+            cout << "[ ";
+            for (int element : cycle) {
+            cout << element << " ";
+            }
+        cout << "]" << std::endl;
+        }
+    }
+
+    void affiche_mes_sommets()
+    {
         for(int j = 0; j< mes_sommets.size();j++)
         {
             mes_sommets[j].affiche_sommet();
         }
-
     }
 
+    int trouve_le_meilleur_retour()
+    {
+        double max = 0;
+        int change = 0;
+        for(int i=1; i< nombre_sommet ;i++)
+        {
+            double temp = matriceDeChange[EURO-1][i] * matriceDeChange[i][EURO-1]; 
 
-string devise(int c) {
-    switch (c) {
-        case EURO:
-            return "EURO";
-        case USD:
-            return "USD";
-        case JP:
-            return "JP";
-        case CHF:
-            return "CHF";
-        default:
-            return "Valeur d'énumération non trouvée";
+            if(temp>max)
+            {
+                max = temp;
+                change = i+1;
+            }
+        }
+        //cout<<"max "<<max<<" pour le sommet : "<<devise(change);
+        return change;
     }
-}
 
-    // void trouve_le_meilleur_allez_retour()
-    // {
-    //     double max = 0;
-    //     int change = 0;
-    //     for(int i=0; i< mes_sommets[EURO-1].connexions.size() ;i++)
-    //     {
-    //         double temp = mes_sommets[EURO-1].connexions[i].cost * mes_sommets[mes_sommets[EURO-1].connexions[i].end-1].connexions[0].cost;
+    void trouve_les_aretes_possible()
+    {
+        for(int i = 0;i<nombre_sommet;i++)
+        {
+            double temp;
+            for(int j = i;j<nombre_sommet;j++)
+            {
+                if(i != j)
+                {
+                   temp = matriceDeChange[i][j] * matriceDeChange[j][i];
+                   if(temp > 1)
+                   {
+                        mes_sommets[i].connexions.push_back(arete(i+1,j+1,matriceDeChange[i][j]));
+                        mes_sommets[j].connexions.push_back(arete(j+1,i+1,matriceDeChange[j][i]));
+                   }
+                   else{
+                    if(i == 0)
+                    {
+                       mes_sommets[i].connexions.push_back(arete(i+1,j+1,matriceDeChange[i][j])); 
+                    }
+                   } 
+                }
+            }
+        }
+    }
 
-    //         if(temp>max)
-    //         {
-    //             max = temp;
-    //             change = mes_sommets[EURO-1].connexions[i].end;
-    //         }
-    //     }
-    //     cout<<"max "<<max<<" pour le sommet : "<<devise(change);
-    // }
+    void trouver_les_cycle(int p) //p nombre de cout 
+    {
+        vector<int> init; 
+        trouve_le_cycle_de_mon_voisin_en_recusrsive(init,EURO,p);
+        cout<<"fin"<<endl;
+    }
 
+    void trouve_le_cycle_de_mon_voisin_en_recusrsive(vector <int> cycle, int sommet_depart, int p)
+    {
+
+        if(sommet_depart == EURO && p==0)
+        {
+            cycle.push_back(sommet_depart);
+            cycle_dispo.push_back(cycle);
+        }
+        else{
+        switch (p)
+        {
+            case 1: //allez a EURO
+                cout<<" case 1 ";
+                p = p-1;
+                cycle.push_back(sommet_depart);
+                trouve_le_cycle_de_mon_voisin_en_recusrsive(cycle,EURO,p);
+                break;
+
+            case 2: //allez a CHF
+                if(mes_sommets[sommet_depart-1].trouve_cette_arete(trouve_le_meilleur_retour()))
+                {
+                    cycle.push_back(trouve_le_meilleur_retour());
+                    p = p-1;
+                    trouve_le_cycle_de_mon_voisin_en_recusrsive(cycle,EURO,p);
+                }   
+                //trouve_le_cycle_de_mon_voisin_en_recusrsive()
+
+                cout<<"HERE";
+                break;
+
+            default:
+                cycle.push_back(sommet_depart);
+                for(int i = 0 ; i < mes_sommets[sommet_depart-1].connexions.size();i++)
+                {
+                    if(mes_sommets[sommet_depart-1].connexions[i].end != EURO)
+                    {
+                        vector <int> temp = cycle;
+                        trouve_le_cycle_de_mon_voisin_en_recusrsive(temp,mes_sommets[sommet_depart-1].connexions[i].end,p--);
+                    }
+                }
+
+                break;
+        }
+        }
+    }
 
 
 };
@@ -140,6 +241,10 @@ string devise(int c) {
 int main()
 {
     Graphe g;
-    
+    g.trouve_les_aretes_possible();
+    g.affiche_mes_sommets();
+    g.trouve_le_meilleur_retour();
+    g.trouver_les_cycle(1);
+    g.affich_mes_cycle();
     return 0;
 }

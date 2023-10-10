@@ -122,7 +122,7 @@ public:
         for (const std::vector<int>& cycle : cycle_dispo) {
             cout << "[ ";
             for (int element : cycle) {
-            cout << element << " ";
+            cout << devise(element) << " ";
             }
         cout << "]" << std::endl;
         }
@@ -190,7 +190,7 @@ public:
     void trouve_le_cycle_de_mon_voisin_en_recusrsive(vector <int> cycle, int sommet_depart, int p)
     {
 
-        if(sommet_depart == EURO && p==0)
+        if((sommet_depart == EURO && p==0)||p==0)
         {
             cycle.push_back(sommet_depart);
             cycle_dispo.push_back(cycle);
@@ -224,7 +224,9 @@ public:
                     if(mes_sommets[sommet_depart-1].connexions[i].end != EURO)
                     {
                         vector <int> temp = cycle;
-                        trouve_le_cycle_de_mon_voisin_en_recusrsive(temp,mes_sommets[sommet_depart-1].connexions[i].end,p--);
+                        p = p-1;
+                        cout<<"abouz"<<p;
+                        trouve_le_cycle_de_mon_voisin_en_recusrsive(temp,mes_sommets[sommet_depart-1].connexions[i].end,p);
                     }
                 }
 
@@ -244,7 +246,7 @@ int main()
     g.trouve_les_aretes_possible();
     g.affiche_mes_sommets();
     g.trouve_le_meilleur_retour();
-    g.trouver_les_cycle(1);
+    g.trouver_les_cycle(3);
     g.affich_mes_cycle();
     return 0;
 }

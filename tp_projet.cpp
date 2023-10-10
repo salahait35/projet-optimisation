@@ -78,17 +78,18 @@ public:
     vector<sommet> mes_sommets;
     Graphe(){
         nombre_sommet = 4;
-        for(int i=1;i<=nombre_sommet;i++)
-        {
-            mes_sommets.push_back(sommet(i));
-            for(int j = 0;j<nombre_sommet;j++)
-            {
-                if(j != i-1)
-                {
-                    mes_sommets[i-1].connexions.push_back(arete(i,j+1,matriceDeChange[i-1][j]));
-                }
-            }
-        }
+        
+        // for(int i=1;i<=nombre_sommet;i++)
+        // {
+        //     mes_sommets.push_back(sommet(i));
+        //     for(int j = 0;j<nombre_sommet;j++)
+        //     {
+        //         if(j != i-1)
+        //         {
+        //             mes_sommets[i-1].connexions.push_back(arete(i,j+1,matriceDeChange[i-1][j]));
+        //         }
+        //     }
+        // }
 
         for(int j = 0; j< mes_sommets.size();j++)
         {
@@ -113,22 +114,22 @@ string devise(int c) {
     }
 }
 
-    void trouve_le_meilleur_allez_retour()
-    {
-        double max = 0;
-        int change = 0;
-        for(int i=0; i< mes_sommets[EURO-1].connexions.size() ;i++)
-        {
-            double temp = mes_sommets[EURO-1].connexions[i].cost * mes_sommets[mes_sommets[EURO-1].connexions[i].end-1].connexions[0].cost;
+    // void trouve_le_meilleur_allez_retour()
+    // {
+    //     double max = 0;
+    //     int change = 0;
+    //     for(int i=0; i< mes_sommets[EURO-1].connexions.size() ;i++)
+    //     {
+    //         double temp = mes_sommets[EURO-1].connexions[i].cost * mes_sommets[mes_sommets[EURO-1].connexions[i].end-1].connexions[0].cost;
 
-            if(temp>max)
-            {
-                max = temp;
-                change = mes_sommets[EURO-1].connexions[i].end;
-            }
-        }
-        cout<<"max "<<max<<" pour le sommet : "<<devise(change);
-    }
+    //         if(temp>max)
+    //         {
+    //             max = temp;
+    //             change = mes_sommets[EURO-1].connexions[i].end;
+    //         }
+    //     }
+    //     cout<<"max "<<max<<" pour le sommet : "<<devise(change);
+    // }
 
 
 
@@ -139,6 +140,6 @@ string devise(int c) {
 int main()
 {
     Graphe g;
-    g.trouve_le_meilleur_allez_retour();
+    
     return 0;
 }

@@ -68,10 +68,11 @@ class arete {
     
     bool trouve_cette_arete(int change)
     {
-        for (const arete& a : connexions) {
-        if (a.end == change) {
-            //return a;
-            return true; cout<<"VRAI";
+        for(int o = 0; o<connexions.size();o++)
+        {
+            if(connexions[o].end == change)
+            {
+                return true;
             }
         }
         return false;
@@ -182,15 +183,20 @@ public:
 
     void trouver_les_cycle(int p) //p nombre de cout 
     {
-        vector<int> init; 
-        trouve_le_cycle_de_mon_voisin_en_recusrsive(init,EURO,p);
+        int lenght = p - 1;
+        for(int i = 0; i< mes_sommets[EURO-1].connexions.size();i++)
+        {
+            vector <int> init; 
+            init.push_back(EURO);
+            trouve_le_cycle_de_mon_voisin_en_recusrsive(init,mes_sommets[EURO-1].connexions[i].end,lenght);
+        }
         cout<<"fin"<<endl;
     }
 
     void trouve_le_cycle_de_mon_voisin_en_recusrsive(vector <int> cycle, int sommet_depart, int p)
     {
 
-        if((sommet_depart == EURO && p==0)||p==0)
+        if(sommet_depart == EURO || p==0)
         {
             cycle.push_back(sommet_depart);
             cycle_dispo.push_back(cycle);
@@ -199,7 +205,6 @@ public:
         switch (p)
         {
             case 1: //allez a EURO
-                cout<<" case 1 ";
                 p = p-1;
                 cycle.push_back(sommet_depart);
                 trouve_le_cycle_de_mon_voisin_en_recusrsive(cycle,EURO,p);
@@ -207,14 +212,12 @@ public:
 
             case 2: //allez a CHF
                 if(mes_sommets[sommet_depart-1].trouve_cette_arete(trouve_le_meilleur_retour()))
-                {
+                {   
+
                     cycle.push_back(trouve_le_meilleur_retour());
                     p = p-1;
                     trouve_le_cycle_de_mon_voisin_en_recusrsive(cycle,EURO,p);
                 }   
-                //trouve_le_cycle_de_mon_voisin_en_recusrsive()
-
-                cout<<"HERE";
                 break;
 
             default:
@@ -225,7 +228,6 @@ public:
                     {
                         vector <int> temp = cycle;
                         p = p-1;
-                        cout<<"abouz"<<p;
                         trouve_le_cycle_de_mon_voisin_en_recusrsive(temp,mes_sommets[sommet_depart-1].connexions[i].end,p);
                     }
                 }
@@ -246,7 +248,7 @@ int main()
     g.trouve_les_aretes_possible();
     g.affiche_mes_sommets();
     g.trouve_le_meilleur_retour();
-    g.trouver_les_cycle(3);
+    g.trouver_les_cycle(2);
     g.affich_mes_cycle();
     return 0;
 }

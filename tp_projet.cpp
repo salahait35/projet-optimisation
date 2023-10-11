@@ -102,6 +102,7 @@ public:
     int nombre_sommet;
     vector<sommet> mes_sommets;
     vector <vector <int> > cycle_dispo;
+    vector <double> gain_de_mes_cycle;
     Graphe(){
         nombre_sommet = 4;
 
@@ -118,14 +119,33 @@ public:
         }
     }
 
-    void affich_mes_cycle()
+    void affiche_mon_cycle(int indice)
+    {
+        if (indice >= 0 && indice < cycle_dispo.size()) {
+        const std::vector<int>& cycle = cycle_dispo[indice];
+        cout << "Cycle " << indice << ": [ ";
+        for (int element : cycle) {
+            cout << devise(element) << " ";
+        }
+        cout << "]";
+        }
+    }
+
+    void calcule_mes_cycle()
     {
         for (const std::vector<int>& cycle : cycle_dispo) {
             cout << "[ ";
             for (int element : cycle) {
             cout << devise(element) << " ";
             }
-        cout << "]" << std::endl;
+            cout << "]";
+            double gain = 1;
+            for(int i = 0; i< cycle.size()-1;i++)
+            {
+                gain = gain * matriceDeChange[cycle[i]-1][cycle[i+1]-1];
+            }
+            cout<<" ---- > "<<gain<<endl;
+            gain_de_mes_cycle.push_back(gain);    
         }
     }
 
@@ -188,10 +208,8 @@ public:
         {
             vector <int> init; 
             init.push_back(EURO);
-            //if(i == 2) // a enelevr uniquepment pour teste
-            {trouve_le_cycle_de_mon_voisin_en_recusrsive(init,mes_sommets[EURO-1].connexions[i].end,lenght);}
+            trouve_le_cycle_de_mon_voisin_en_recusrsive(init,mes_sommets[EURO-1].connexions[i].end,lenght);
         }
-        cout<<"fin"<<endl;
     }
 
     void trouve_le_cycle_de_mon_voisin_en_recusrsive(vector <int> cycle, int sommet_depart, int p)
@@ -242,6 +260,25 @@ public:
         }
     }
 
+    pair<int,double> mon_meilleur_cycle()
+    {
+
+        double max_valeur = gain_de_mes_cycle[0];
+        int max_indice = 0;
+        for (int i = 1; i < gain_de_mes_cycle.size(); i++) {
+        if (gain_de_mes_cycle[i] > max_valeur) {
+            max_valeur = gain_de_mes_cycle[i];
+            max_indice = i;
+        }
+    }
+    cout<<endl<<"Mon meilleur cycle est ";
+    affiche_mon_cycle(max_indice);
+    cout<<" avec une valeur de "<<max_valeur<<" et mon total de cycle est de "<<cycle_dispo.size()<<endl;
+    return std::make_pair(max_valeur, max_indice);
+    }
+
+    
+
 
 };
           
@@ -253,7 +290,8 @@ int main()
     g.trouve_les_aretes_possible();
     g.affiche_mes_sommets();
     g.trouve_le_meilleur_retour();
-    g.trouver_les_cycle(10);
-    g.affich_mes_cycle();
+    g.trouver_les_cycle(3);
+    g.calcule_mes_cycle();
+    g.mon_meilleur_cycle();
     return 0;
 }

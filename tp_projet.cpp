@@ -188,7 +188,7 @@ public:
         {
             vector <int> init; 
             init.push_back(EURO);
-            if(i == 2) // a enelevr uniquepment pour teste
+            //if(i == 2) // a enelevr uniquepment pour teste
             {trouve_le_cycle_de_mon_voisin_en_recusrsive(init,mes_sommets[EURO-1].connexions[i].end,lenght);}
         }
         cout<<"fin"<<endl;
@@ -200,7 +200,7 @@ public:
         if(sommet_depart == EURO || p==0 )
         {
             cycle.push_back(sommet_depart);
-            cycle_dispo.push_back(cycle);
+            if(sommet_depart == EURO)cycle_dispo.push_back(cycle);
         }
         else{
         switch (p)
@@ -227,12 +227,12 @@ public:
 
             default:
                 cycle.push_back(sommet_depart);
+                p = p-1;
                 for(int i = 0 ; i < mes_sommets[sommet_depart-1].connexions.size();i++)
                 {
                     //if(mes_sommets[sommet_depart-1].connexions[i].end != EURO)
                     {
                         vector <int> temp = cycle;
-                        p = p-1;
                         trouve_le_cycle_de_mon_voisin_en_recusrsive(temp,mes_sommets[sommet_depart-1].connexions[i].end,p);
                     }
                 }
@@ -253,7 +253,7 @@ int main()
     g.trouve_les_aretes_possible();
     g.affiche_mes_sommets();
     g.trouve_le_meilleur_retour();
-    g.trouver_les_cycle(4);
+    g.trouver_les_cycle(10);
     g.affich_mes_cycle();
     return 0;
 }

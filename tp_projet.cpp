@@ -188,7 +188,8 @@ public:
         {
             vector <int> init; 
             init.push_back(EURO);
-            trouve_le_cycle_de_mon_voisin_en_recusrsive(init,mes_sommets[EURO-1].connexions[i].end,lenght);
+            if(i == 2) // a enelevr uniquepment pour teste
+            {trouve_le_cycle_de_mon_voisin_en_recusrsive(init,mes_sommets[EURO-1].connexions[i].end,lenght);}
         }
         cout<<"fin"<<endl;
     }
@@ -196,7 +197,7 @@ public:
     void trouve_le_cycle_de_mon_voisin_en_recusrsive(vector <int> cycle, int sommet_depart, int p)
     {
 
-        if(sommet_depart == EURO || p==0)
+        if(sommet_depart == EURO || p==0 )
         {
             cycle.push_back(sommet_depart);
             cycle_dispo.push_back(cycle);
@@ -213,18 +214,22 @@ public:
             case 2: //allez a CHF
                 if(mes_sommets[sommet_depart-1].trouve_cette_arete(trouve_le_meilleur_retour()))
                 {   
-
+                    cycle.push_back(sommet_depart);
                     cycle.push_back(trouve_le_meilleur_retour());
                     p = p-1;
                     trouve_le_cycle_de_mon_voisin_en_recusrsive(cycle,EURO,p);
                 }   
+                else if(sommet_depart == trouve_le_meilleur_retour()){
+                    cycle.push_back(sommet_depart);
+                    trouve_le_cycle_de_mon_voisin_en_recusrsive(cycle,EURO,p);
+                }
                 break;
 
             default:
                 cycle.push_back(sommet_depart);
                 for(int i = 0 ; i < mes_sommets[sommet_depart-1].connexions.size();i++)
                 {
-                    if(mes_sommets[sommet_depart-1].connexions[i].end != EURO)
+                    //if(mes_sommets[sommet_depart-1].connexions[i].end != EURO)
                     {
                         vector <int> temp = cycle;
                         p = p-1;
@@ -248,7 +253,7 @@ int main()
     g.trouve_les_aretes_possible();
     g.affiche_mes_sommets();
     g.trouve_le_meilleur_retour();
-    g.trouver_les_cycle(2);
+    g.trouver_les_cycle(4);
     g.affich_mes_cycle();
     return 0;
 }

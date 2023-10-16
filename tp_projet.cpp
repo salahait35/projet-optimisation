@@ -260,7 +260,7 @@ public:
         }
     }
 
-    pair<int,double> mon_meilleur_cycle()
+    pair<double,double> mon_meilleur_cycle()
     {
 
         double max_valeur = gain_de_mes_cycle[0];
@@ -277,6 +277,17 @@ public:
     return std::make_pair(max_valeur, max_indice);
     }
 
+    void mon_gain_calculer(double max_valeur)
+    {
+        double mise_de_depart = 0;
+        cout<<endl<<"Veuillez rentrer votre mise de depart"<<endl;
+        cin>>mise_de_depart;
+        cout<<endl<<"somme a la fin des echanges : "<<(mise_de_depart*max_valeur)<<" avec un gain de : "<<(mise_de_depart*max_valeur) - mise_de_depart;
+        cout<<endl<<"ce gain reprensente : "<<(1 -(1 - (((mise_de_depart*max_valeur) - mise_de_depart)/mise_de_depart)))*100<<"%"<<endl;
+
+
+    }
+
     
 
 
@@ -291,6 +302,7 @@ int main()
     g.trouve_le_meilleur_retour();
     g.trouver_les_cycles(g.nb_saut);
     g.calcule_mes_cycles();
-    g.mon_meilleur_cycle();
+    g.mon_gain_calculer(g.mon_meilleur_cycle().first);
+ 
     return 0;
 }
